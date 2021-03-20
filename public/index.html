@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=2.00, minimum-scale=1.00, user-scalable=no"
+    />
+    <link href="estilo.css" rel="stylesheet" type="text/css" />
+
+    <title>Campo Eléctrico</title>
+  </head>
+  <body>
+    <input
+      type="number"
+      onchange="obtenerCarga()"
+      id="cargaInput"
+      placeholder="carga"
+    />nC
+    <h3 id="distancia">Distancia:</h3>
+    <h3 id="campo">Campo:</h3>
+    <h3 id="q">Q: X:0Y:0</h3>
+    <h3 id="p">P: X:0Y:0</h3>
+    <div id="carga" class="draggable">
+      <p></p>
+    </div>
+
+    <div id="punto" class="draggable">
+      <p></p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="logica.js"></script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+#carga,
+#punto {
+  height: 25px;
+  width: 25px;
+  line-height: 25px;
+  text-align: center;
+  color: white;
+  border-radius: 100%;
+  touch-action: none;
+  user-select: none;
+  -webkit-transform: translate(0px, 0px);
+  transform: translate(0px, 0px);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(50%, 50%);
+}
+#carga {
+  background-color: red;
+  box-shadow: 0 0 30px 10px red;
+}
+#punto {
+  background-color: black;
+}
+html,
+body {
+  height: 95%;
+  font-family: arial;
+}
+
+body {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, grey 1px, transparent 1px),
+    linear-gradient(to bottom, grey 1px, transparent 1px);
+}
