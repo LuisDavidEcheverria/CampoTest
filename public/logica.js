@@ -1,6 +1,10 @@
+let cargas = [];
 var carga = {
   x: 0,
   y: 0,
+  carga: 0,
+  div: null,
+  vector: null,
 };
 
 var punto = {
@@ -8,10 +12,22 @@ var punto = {
   y: 0,
 };
 
+var vectorSuma = {
+  x: 0,
+  y: 0,
+};
+let interactuable = document.getElementById("interactuable");
+let vectores = document.getElementById("vectores");
+
 var distancia = 0;
 var q = 0;
 var cargaHTML = document.getElementById("carga");
+//Prueba con Vectores
 
+var linea = document.getElementById("linea");
+
+//
+function dibujarVectores() {}
 function obtenerCarga() {
   q = document.getElementById("cargaInput").value * Math.pow(10, -9);
   if (q > 0) {
@@ -44,7 +60,7 @@ interact(".draggable").draggable({
   modifiers: [
     interact.modifiers.restrictRect({
       restriction: "parent",
-      endOnly: true,
+      endOnly: false,
 
       //prueba para hacer que se muevan en una grid
     }) /*
@@ -55,7 +71,7 @@ interact(".draggable").draggable({
       })*/,
   ],
 
-  autoScroll: true,
+  autoScroll: false,
 
   listeners: {
     //Llama esta función cada que se mueve un elemento
@@ -72,8 +88,12 @@ interact(".draggable").draggable({
 function dragMoveListener(event) {
   var target = event.target;
   // keep the dragged position in the data-x/data-y attributes
-  var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
-  var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+  var x = Math.floor(
+    (parseFloat(target.getAttribute("data-x")) || 0) + event.dx
+  );
+  var y = Math.floor(
+    (parseFloat(target.getAttribute("data-y")) || 0) + event.dy
+  );
 
   // Mueve el elemento
   target.style.webkitTransform = target.style.transform =
@@ -99,6 +119,48 @@ function dragMoveListener(event) {
   document.getElementById("q").textContent = "Q: X:" + carga.x + "Y:" + carga.y;
   document.getElementById("p").textContent = "P: X:" + punto.x + "Y:" + punto.y;
   obtenerCampo();
+
+  //Test de Vectores
+  dibujarVectores();
+  linea.setAttribute("x1", carga.x + 12.5);
+  linea.setAttribute("y1", carga.y + 12.5);
+  linea.setAttribute("x2", punto.x + 12.5);
+  linea.setAttribute("y2", punto.y + 12.5);
+}
+//Remover cargas con doble click
+interact(".draggable").on("doubletap", function (event) {
+  var target = event.target;
+  if (target.getAttribute("id") == "carga") {
+    target.remove();
+  }
+});
+
+function AgregarCarga() {
+  //Crea una nuevo espacio para la carga
+  let div = document.createElement("div");
+  div.className = "draggable";
+  div.id = "carga";
+  interactuable.appendChild(div);
+
+  //Crea un nuevo vector
+  let vector = document.createElement("line");
+  vector.id = "linea";
+  vector.setAttribute("x1", 0);
+  vector.setAttribute("y1", 0);
+  vector.setAttribute("x2", punto.x + 12.5);
+  vector.setAttribute("y2", punto.y + 12.5);
+  vectores.appendChild(vector);
+
+  //Crea un objecto carga
+  let nuevaCarga = Object.create(carga);
+  nuevaCarga.x = 0;
+  nuevaCarga.y = 0;
+  nuevaCarga.div = div;
+  nuevaCarga.vector = vector;
+
+  //Agrega el nuevo objeto a un array con todas las cargas
+  cargas.push(nuevaCarga);
+  console.log("Carga agregada: ", nuevaCarga);
 }
 
 window.dragMoveListener = dragMoveListener;
