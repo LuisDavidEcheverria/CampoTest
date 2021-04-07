@@ -2,9 +2,12 @@ let cargas = [];
 var carga = {
   x: 0,
   y: 0,
-  carga: 0,
+  carga: 1,
+  texto: null,
   div: null,
   vector: null,
+  i: 0,
+  j: 0,
 };
 
 var punto = {
@@ -19,14 +22,9 @@ var vectorSuma = {
 let interactuable = document.getElementById("interactuable");
 let vectores = document.getElementById("vectores");
 
-var distancia = 0;
 var q = 0;
 var cargaHTML = document.getElementById("carga");
-//Prueba con Vectores
 
-var linea = document.getElementById("linea");
-
-//
 function dibujarVectores() {}
 function obtenerCarga() {
   q = document.getElementById("cargaInput").value * Math.pow(10, -9);
@@ -46,10 +44,28 @@ function obtenerCarga() {
 let e = 0;
 const k = 9 * Math.pow(10, 9);
 let campo = document.getElementById("campo");
+
 function obtenerCampo() {
-  e = ((k * q) / Math.pow(distancia, 2)).toFixed(2);
-  console.log("Campo: ", e);
-  campo.textContent = "Campo: " + e;
+  e = 0;
+  for (let i = 0; i < cargas.length; i++) {
+    {
+      //console.log(cargas[i].x);
+      //Obtiene la distancia
+      let distancia = (
+        Math.sqrt(
+          Math.pow(punto.x - cargas[i].x, 2) +
+            Math.pow(punto.y - cargas[i].y, 2)
+        ) / 40
+      ).toFixed(2);
+      console.log("D" + i + ":" + distancia);
+      //Calcula el campo para todas las cargas
+      e += parseFloat(
+        ((k * cargas[i].carga) / Math.pow(parseFloat(distancia), 2)).toFixed(2)
+      );
+    }
+  }
+  e = (e * Math.pow(10, -9)).toFixed(2);
+  campo.textContent = "Campo: " + e + " N/C";
 }
 
 // target elements with the "draggable" class
@@ -79,6 +95,7 @@ interact(".draggable").draggable({
 
     // Llama esta función cada que un elemento termina de ser arrastrado
     end(event) {
+      //obtenerCampo();
       console.log("Punto", punto);
       console.log("Carga", carga);
     },
@@ -102,51 +119,60 @@ function dragMoveListener(event) {
   // Actualiza las posiciones
   target.setAttribute("data-x", x);
   target.setAttribute("data-y", y);
-
-  if (target.getAttribute("id") == "carga") {
-    carga.x = x;
-    carga.y = y;
-  } else {
+  if (target.getAttribute("id") == "punto") {
     punto.x = x;
     punto.y = y;
+  } else {
+    for (let i = 0; i < cargas.length; i++) {
+      if (cargas[i].div.id == target.id) {
+        cargas[i].x = x;
+        cargas[i].y = y;
+        //console.log(cargas);
+        break;
+      }
+    }
   }
-  //Obtiene la distancia
-  distancia = (
-    Math.sqrt(Math.pow(punto.x - carga.x, 2) + Math.pow(punto.y - carga.y, 2)) /
-    40
-  ).toFixed(2);
-  document.getElementById("distancia").textContent = "Distancia: " + distancia;
+
   document.getElementById("q").textContent = "Q: X:" + carga.x + "Y:" + carga.y;
   document.getElementById("p").textContent = "P: X:" + punto.x + "Y:" + punto.y;
   obtenerCampo();
 
   //Test de Vectores
-  dibujarVectores();
-  linea.setAttribute("x1", carga.x + 12.5);
-  linea.setAttribute("y1", carga.y + 12.5);
-  linea.setAttribute("x2", punto.x + 12.5);
-  linea.setAttribute("y2", punto.y + 12.5);
+  cargas.forEach((cargaProto) => {
+    cargaProto.vector.setAttribute("x1", cargaProto.x + 12.5);
+    cargaProto.vector.setAttribute("y1", cargaProto.y + 12.5);
+    cargaProto.vector.setAttribute("x2", punto.x + 12.5);
+    cargaProto.vector.setAttribute("y2", punto.y + 12.5);
+  });
 }
+
 //Remover cargas con doble click
-interact(".draggable").on("doubletap", function (event) {
-  var target = event.target;
-  if (target.getAttribute("id") == "carga") {
-    target.remove();
+interact(".carga").on("doubletap", function (event) {
+  let target = event.target;
+  for (let i = 0; i < cargas.length; i++) {
+    if (cargas[i].div.id == target.id) {
+      cargas[i].div.remove();
+      cargas[i].vector.remove();
+      cargas.splice(i, 1);
+      break;
+    }
   }
+  obtenerCampo();
 });
 
+let n = 0;
 function AgregarCarga() {
   //Crea una nuevo espacio para la carga
   let div = document.createElement("div");
-  div.className = "draggable";
-  div.id = "carga";
+  div.className = "carga draggable";
+  div.id = "carga" + n;
   interactuable.appendChild(div);
-
   //Crea un nuevo vector
-  let vector = document.createElement("line");
-  vector.id = "linea";
-  vector.setAttribute("x1", 0);
-  vector.setAttribute("y1", 0);
+  let vector = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  vector.id = "linea" + n;
+  vector.setAttribute("x1", 12.5);
+  vector.setAttribute("x1", 12.5);
+  vector.setAttribute("y1", 12.5);
   vector.setAttribute("x2", punto.x + 12.5);
   vector.setAttribute("y2", punto.y + 12.5);
   vectores.appendChild(vector);
@@ -155,12 +181,35 @@ function AgregarCarga() {
   let nuevaCarga = Object.create(carga);
   nuevaCarga.x = 0;
   nuevaCarga.y = 0;
+  nuevaCarga.carga = document.getElementById("cargaInput").value;
+  //Crea un nuevo texto
+  let txt = document.createTextNode(nuevaCarga.carga);
+  div.appendChild(txt);
+  nuevaCarga.texto = txt;
+  if (nuevaCarga.carga > 0) {
+    div.className += " positiva";
+    vector.setAttribute("class", "vecPos");
+  } else {
+    div.className += " negativa";
+    vector.setAttribute("class", "vecNeg");
+  }
   nuevaCarga.div = div;
   nuevaCarga.vector = vector;
 
   //Agrega el nuevo objeto a un array con todas las cargas
   cargas.push(nuevaCarga);
   console.log("Carga agregada: ", nuevaCarga);
+  n++;
+
+  obtenerCampo();
 }
 
+function AlternarVectores(value) {
+  console.log(value.checked);
+  if (value.checked) {
+    vectores.style.visibility = "visible";
+  } else {
+    vectores.style.visibility = "hidden";
+  }
+}
 window.dragMoveListener = dragMoveListener;

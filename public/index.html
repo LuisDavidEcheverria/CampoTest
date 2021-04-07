@@ -13,43 +13,70 @@
   </head>
   <body>
     <div class="container">
-      <div id="canvas">
-        <svg
-          id="vectores"
-          version="1.2"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          width="100%"
-          height="100%"
-        >
-          <line id="linea" x1="0" y1="0" x2="0" y2="0" />
-        </svg>
-      </div>
+      <svg
+        id="vectores"
+        version="1.2"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="100%"
+        height="100%"
+      >
+        <defs>
+          <marker
+            id="redTriangle"
+            viewBox="0 0 10 10"
+            refX="15"
+            refY="5"
+            markerUnits="strokeWidth"
+            markerWidth="3.5"
+            markerHeight="3.5"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="red" />
+          </marker>
+          <marker
+            id="blueTriangle"
+            viewBox="0 0 10 10"
+            refX="15"
+            refY="5"
+            markerUnits="strokeWidth"
+            markerWidth="3.5"
+            markerHeight="3.5"
+            orient="auto"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="blue" />
+          </marker>
+        </defs>
+      </svg>
       <div id="ui">
+        <h3 id="distancia">Distancia:</h3>
+        <h3 id="campo">Campo: 0.00 N/C</h3>
+        <h3 id="q">Q: X:0Y:0</h3>
+        <h3 id="p">P: X:0Y:0</h3>
+        <label>Cuadrícula y vectores</label>
+        <input
+          type="checkbox"
+          id="check"
+          onchange="AlternarVectores(this)"
+          checked
+        /><br /><br />
         <input
           type="number"
           onchange="obtenerCarga()"
           id="cargaInput"
-          placeholder="carga"
-        />nC
-        <h3 id="distancia">Distancia:</h3>
-        <h3 id="campo">Campo:</h3>
-        <h3 id="q">Q: X:0Y:0</h3>
-        <h3 id="p">P: X:0Y:0</h3>
+          placeholder="Carga"
+        />nC<br /><br />
         <button onclick="AgregarCarga()">Agregar carga</button>
       </div>
       <div id="interactuable">
-        <div id="punto" class="draggable">
-          <p></p>
-        </div>
-        <div id="carga" class="draggable">
-          <p></p>
-        </div>
+        <div id="punto" class="punto draggable">P</div>
       </div>
     </div>
+    <!--#region Scripts-->
     <script src="snap.svg-min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <script src="logica.js"></script>
+    <!-- #endregion -->
   </body>
 </html>

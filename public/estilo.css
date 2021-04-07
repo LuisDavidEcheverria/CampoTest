@@ -4,10 +4,29 @@ body {
   margin: 0px;
   padding: 0px;
   font-family: arial;
+  background-color: white;
 }
 
-#carga,
-#punto {
+/* Estilos de los vectores */
+svg {
+  position: absolute;
+}
+
+line {
+  stroke-width: 4;
+}
+.vecPos {
+  stroke: red;
+  background-color: red;
+  marker-end: url("#redTriangle");
+}
+.vecNeg {
+  background-color: blue;
+  stroke: blue;
+  marker-end: url("#blueTriangle");
+}
+/* Estilos de las cargas */
+.draggable {
   height: 25px;
   width: 25px;
   line-height: 25px;
@@ -17,22 +36,25 @@ body {
   touch-action: none;
   user-select: none;
   position: absolute;
+
+  font-size: smaller;
+  font-weight: bold;
 }
-svg {
-  position: absolute;
-}
-#linea {
-  stroke: rgb(255, 0, 0);
-  stroke-width: 4;
-}
-#carga {
-  background-color: red;
+
+.positiva {
   box-shadow: 0 0 30px 10px red;
+  background-color: red;
 }
+.negativa {
+  box-shadow: 0 0 30px 10px blue;
+  background-color: blue;
+}
+
 #punto {
   background-color: black;
 }
 
+/* Estilos de la grid */
 .container {
   border: black 2px solid;
   width: 100%;
@@ -41,9 +63,9 @@ svg {
   display: grid;
   grid-template-columns: 1fr 5fr;
 }
-#canvas {
+/* Efecto de cuadrícula y capa de los vectores*/
+#vectores {
   width: 100%;
-  border: red 2px solid;
   width: 100%;
   height: 100%;
   grid-area: 1 / 2 / 2 / 2;
@@ -51,14 +73,14 @@ svg {
   background-image: linear-gradient(to right, grey 2px, transparent 1px),
     linear-gradient(to bottom, grey 2px, transparent 2px);
 }
+/* Capa de las  cargas*/
 #interactuable {
-  border: blue 2px solid;
   width: 100%;
   height: 100%;
   grid-area: 1 / 2 / 2 / 2;
 }
+/* Capa de la interfaz de usuario */
 #ui {
   height: 100%;
-  border: darkorange 3px solid;
   grid-area: 1 / 1 / 2 / 2;
 }
