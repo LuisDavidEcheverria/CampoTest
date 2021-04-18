@@ -1,6 +1,5 @@
 let gridSize = 40;
 let n = 0;
-let e = 0;
 const k = 9 * Math.pow(10, 9);
 
 let cargas = [];
@@ -20,10 +19,7 @@ let punto = {
   y: 0,
 };
 
-var vectorSuma = {
-  x: 0,
-  y: 0,
-};
+let vecRes = document.getElementById("resultado");
 let interactuable = document.getElementById("interactuable");
 let vectores = document.getElementById("vectores");
 
@@ -48,7 +44,7 @@ function obtenerCarga() {
 
 function calcularComponentes(carga) {
   let compX = Math.abs(punto.x - carga.x);
-  if (punto.x > carga.x) {
+  if (punto.x < carga.x) {
     compX *= -1;
   }
 
@@ -63,8 +59,7 @@ function calcularComponentes(carga) {
     y: compY / gridSize,
   };
 
-  console.log("CompX: ", componentes.x);
-  console.log("CompY: ", componentes.y);
+  console.log(componentes);
 
   return componentes;
 }
@@ -73,34 +68,55 @@ function calcularDistancia(componentes) {
   let distancia = Math.sqrt(
     Math.pow(componentes.x, 2) + Math.pow(componentes.y, 2)
   ).toFixed(2);
+  console.log("Distancia:" + distancia);
   return distancia;
 }
 
 function calcularUnitario(componentes, distancia) {
   let unitario = {
-    i: componentes.x / Math.abs(distancia),
-    j: componentes.y / Math.abs(distancia),
+    i: (componentes.x / Math.abs(distancia)).toFixed(2),
+    j: (componentes.y / Math.abs(distancia)).toFixed(2),
   };
+  console.log(unitario);
   return unitario;
 }
 
+let vectorTotal = {
+  i: 0,
+  j: 0,
+};
 function calcularCampo() {
-  e = 0;
+  vectorTotal.i = 0;
+  vectorTotal.j = 0;
   for (let i = 0; i < cargas.length; i++) {
     {
       //console.log(cargas[i].x);
+      console.log("//////// " + i + " ////////");
       let componentes = calcularComponentes(cargas[i]);
       let distancia = calcularDistancia(componentes);
       let unitario = calcularUnitario(componentes, distancia);
-      console.log("D" + i + ":" + distancia);
+
       //Calcula el campo para todas las cargas
-      e += parseFloat(
-        ((k * cargas[i].carga) / Math.pow(parseFloat(distancia), 2)).toFixed(2)
+
+      distancia = distancia / 1;
+      console.log("D: ", distancia);
+      let e = parseFloat(
+        ((k * cargas[i].carga) / Math.pow(distancia, 2)).toFixed(2)
       );
+      console.log(e);
+      vectorTotal.i += e * unitario.i;
+      vectorTotal.j += e * unitario.j;
+      cargas[i].vector.setAttribute("x1", punto.x + 12.5);
+      cargas[i].vector.setAttribute("y1", punto.y + 12.5);
+      cargas[i].vector.setAttribute("x2", punto.x + e * unitario.i + 12.5);
+      cargas[i].vector.setAttribute("y2", punto.y + e * unitario.j + 12.5);
     }
+    console.log(vectorTotal);
+    vecRes.setAttribute("x1", punto.x + 12.5);
+    vecRes.setAttribute("y1", punto.y + 12.5);
+    vecRes.setAttribute("x2", punto.x + vectorTotal.i + 12.5);
+    vecRes.setAttribute("y2", punto.y + vectorTotal.j + 12.5);
   }
-  e = (e * Math.pow(10, -9)).toFixed(2);
-  campo.textContent = "Campo: " + e + " N/C";
 }
 
 function actualizarPosicion(target) {}
@@ -171,6 +187,7 @@ function dragMoveListener(event) {
   document.getElementById("p").textContent = "P: X:" + punto.x + "Y:" + punto.y;
   calcularCampo();
 
+  /*
   //Test de Vectores
   cargas.forEach((cargaProto) => {
     cargaProto.vector.setAttribute("x1", cargaProto.x + 12.5);
@@ -178,6 +195,7 @@ function dragMoveListener(event) {
     cargaProto.vector.setAttribute("x2", punto.x + 12.5);
     cargaProto.vector.setAttribute("y2", punto.y + 12.5);
   });
+  */
 }
 
 //Remover cargas con doble click
@@ -214,9 +232,12 @@ function AgregarCarga() {
   let nuevaCarga = Object.create(carga);
   nuevaCarga.x = 0;
   nuevaCarga.y = 0;
-  nuevaCarga.carga = document.getElementById("cargaInput").value;
+  nuevaCarga.carga =
+    document.getElementById("cargaInput").value * Math.pow(10, -9);
   //Crea un nuevo texto
-  let txt = document.createTextNode(nuevaCarga.carga);
+  let txt = document.createTextNode(
+    document.getElementById("cargaInput").value
+  );
   div.appendChild(txt);
   nuevaCarga.texto = txt;
   if (nuevaCarga.carga > 0) {
@@ -237,7 +258,6 @@ function AgregarCarga() {
   calcularCampo();
 }
 
-function VectorUnitario(carga) {}
 function AlternarVectores(value) {
   console.log(value.checked);
   if (value.checked) {

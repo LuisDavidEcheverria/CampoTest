@@ -13,9 +13,13 @@ svg {
 }
 
 line {
-  stroke-width: 4;
+  stroke-width: 3.5;
 }
-
+.vecRes {
+  stroke: rgb(31, 160, 31, 0.5);
+  background-color: green;
+  marker-end: url("#greenTriangle");
+}
 .vecPos {
   stroke: rgba(255, 0, 0, 0.5);
   background-color: red;
@@ -45,11 +49,11 @@ line {
   background-color: brown;
 }
 .positiva {
-  box-shadow: 0 0 30px 10px red;
+  box-shadow: 0 0 15px 5px red;
   background-color: red;
 }
 .negativa {
-  box-shadow: 0 0 30px 10px blue;
+  box-shadow: 0 0 15px 5px blue;
   background-color: blue;
 }
 
