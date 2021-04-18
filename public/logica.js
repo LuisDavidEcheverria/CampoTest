@@ -1,5 +1,10 @@
+let gridSize = 40;
+let n = 0;
+let e = 0;
+const k = 9 * Math.pow(10, 9);
+
 let cargas = [];
-var carga = {
+let carga = {
   x: 0,
   y: 0,
   carga: 1,
@@ -10,7 +15,7 @@ var carga = {
   j: 0,
 };
 
-var punto = {
+let punto = {
   x: 0,
   y: 0,
 };
@@ -25,7 +30,8 @@ let vectores = document.getElementById("vectores");
 var q = 0;
 var cargaHTML = document.getElementById("carga");
 
-function dibujarVectores() {}
+let campo = document.getElementById("campo");
+
 function obtenerCarga() {
   q = document.getElementById("cargaInput").value * Math.pow(10, -9);
   if (q > 0) {
@@ -37,26 +43,55 @@ function obtenerCarga() {
     cargaHTML.textContent = "-";
     cargaHTML.style.boxShadow = "0 0 30px 10px blue";
   }
-  obtenerCampo();
-  console.log(q);
+  calcularCampo();
 }
 
-let e = 0;
-const k = 9 * Math.pow(10, 9);
-let campo = document.getElementById("campo");
+function calcularComponentes(carga) {
+  let compX = Math.abs(punto.x - carga.x);
+  if (punto.x > carga.x) {
+    compX *= -1;
+  }
 
-function obtenerCampo() {
+  let compY = Math.abs(punto.y - carga.y);
+  if (punto.y < carga.y) {
+    compY *= -1;
+  }
+
+  let componentes = {
+    //Recordar posible toFixed a 2 decimales
+    x: compX / gridSize,
+    y: compY / gridSize,
+  };
+
+  console.log("CompX: ", componentes.x);
+  console.log("CompY: ", componentes.y);
+
+  return componentes;
+}
+
+function calcularDistancia(componentes) {
+  let distancia = Math.sqrt(
+    Math.pow(componentes.x, 2) + Math.pow(componentes.y, 2)
+  ).toFixed(2);
+  return distancia;
+}
+
+function calcularUnitario(componentes, distancia) {
+  let unitario = {
+    i: componentes.x / Math.abs(distancia),
+    j: componentes.y / Math.abs(distancia),
+  };
+  return unitario;
+}
+
+function calcularCampo() {
   e = 0;
   for (let i = 0; i < cargas.length; i++) {
     {
       //console.log(cargas[i].x);
-      //Obtiene la distancia
-      let distancia = (
-        Math.sqrt(
-          Math.pow(punto.x - cargas[i].x, 2) +
-            Math.pow(punto.y - cargas[i].y, 2)
-        ) / 40
-      ).toFixed(2);
+      let componentes = calcularComponentes(cargas[i]);
+      let distancia = calcularDistancia(componentes);
+      let unitario = calcularUnitario(componentes, distancia);
       console.log("D" + i + ":" + distancia);
       //Calcula el campo para todas las cargas
       e += parseFloat(
@@ -68,18 +103,17 @@ function obtenerCampo() {
   campo.textContent = "Campo: " + e + " N/C";
 }
 
-// target elements with the "draggable" class
+function actualizarPosicion(target) {}
+// Afecta a todos los elementos de clase "draggable"
 interact(".draggable").draggable({
-  // enable inertial throwing
   inertia: false,
   //Mantiene los elementos en el parent
   modifiers: [
     interact.modifiers.restrictRect({
       restriction: "parent",
       endOnly: false,
-
-      //prueba para hacer que se muevan en una grid
     }) /*
+      prueba para hacer que se muevan en una grid
       interact.modifiers.snap({
         targets:[
           interact.snappers.grid({x:40,y:40})
@@ -135,7 +169,7 @@ function dragMoveListener(event) {
 
   document.getElementById("q").textContent = "Q: X:" + carga.x + "Y:" + carga.y;
   document.getElementById("p").textContent = "P: X:" + punto.x + "Y:" + punto.y;
-  obtenerCampo();
+  calcularCampo();
 
   //Test de Vectores
   cargas.forEach((cargaProto) => {
@@ -157,10 +191,9 @@ interact(".carga").on("doubletap", function (event) {
       break;
     }
   }
-  obtenerCampo();
+  calcularCampo();
 });
 
-let n = 0;
 function AgregarCarga() {
   //Crea una nuevo espacio para la carga
   let div = document.createElement("div");
@@ -201,9 +234,10 @@ function AgregarCarga() {
   console.log("Carga agregada: ", nuevaCarga);
   n++;
 
-  obtenerCampo();
+  calcularCampo();
 }
 
+function VectorUnitario(carga) {}
 function AlternarVectores(value) {
   console.log(value.checked);
   if (value.checked) {

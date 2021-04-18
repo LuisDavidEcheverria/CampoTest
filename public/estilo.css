@@ -15,14 +15,15 @@ svg {
 line {
   stroke-width: 4;
 }
+
 .vecPos {
-  stroke: red;
+  stroke: rgba(255, 0, 0, 0.5);
   background-color: red;
   marker-end: url("#redTriangle");
 }
 .vecNeg {
   background-color: blue;
-  stroke: blue;
+  stroke: rgba(0, 0, 255, 0.5);
   marker-end: url("#blueTriangle");
 }
 /* Estilos de las cargas */
@@ -40,7 +41,9 @@ line {
   font-size: smaller;
   font-weight: bold;
 }
-
+.carga {
+  background-color: brown;
+}
 .positiva {
   box-shadow: 0 0 30px 10px red;
   background-color: red;
