@@ -1,3 +1,10 @@
+:root {
+  --rojo: rgb(255, 82, 82);
+  --azul: rgb(52, 172, 224);
+  --rojoTrans: rgba(255, 0, 0, 0.5);
+  --azulTrans: rgba(52, 172, 224, 0.5);
+}
+
 html,
 body {
   height: 100%;
@@ -16,18 +23,15 @@ line {
   stroke-width: 3.5;
 }
 .vecRes {
-  stroke: rgb(31, 160, 31, 0.5);
-  background-color: green;
+  stroke: rgba(0, 158, 0, 0.5);
   marker-end: url("#greenTriangle");
 }
 .vecPos {
-  stroke: rgba(255, 0, 0, 0.5);
-  background-color: red;
+  stroke: var(--rojoTrans);
   marker-end: url("#redTriangle");
 }
 .vecNeg {
-  background-color: blue;
-  stroke: rgba(0, 0, 255, 0.5);
+  stroke: var(--azulTrans);
   marker-end: url("#blueTriangle");
 }
 /* Estilos de las cargas */
@@ -46,15 +50,15 @@ line {
   font-weight: bold;
 }
 .carga {
-  background-color: brown;
+  background-color: black;
 }
 .positiva {
-  box-shadow: 0 0 15px 5px red;
-  background-color: red;
+  box-shadow: 0 0 15px 5px var(--rojo);
+  background: var(--rojo);
 }
 .negativa {
-  box-shadow: 0 0 15px 5px blue;
-  background-color: blue;
+  box-shadow: 0 0 15px 5px var(--azul);
+  background: var(--azul);
 }
 
 #punto {
@@ -91,3 +95,39 @@ line {
   height: 100%;
   grid-area: 1 / 1 / 2 / 2;
 }
+
+/* Animaciones 
+@keyframes pulso-azul {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 172, 224, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(52, 172, 224, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 172, 224, 0);
+  }
+}
+@keyframes pulso-rojo {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+  }
+}
+
+.negativa {
+  animation: pulso-azul 1.5s infinite;
+}
+.positiva {
+  animation: pulso-rojo 1.5s infinite;
+}
+*/
